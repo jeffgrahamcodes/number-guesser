@@ -1,61 +1,81 @@
 'use strict';
 
-let secretNumber = Math.trunc(Math.random() * 20) + 1;
+// Initialize game state variables
+let secretNumber = generateSecretNumber();
 let score = 20;
 let highScore = 0;
 
-const bodyElement = document.querySelector('body');
-const numberDiv = document.querySelector('.number');
-const scoreSpan = document.querySelector('.score');
-const msg = document.querySelector('.message');
-const input = document.querySelector('.guess');
-const checkButton = document.querySelector('.check');
-const againButton = document.querySelector('.again');
-const highScoreSpan = document.querySelector('.highscore');
+// Select DOM elements once
+const body = document.body;
+const numberDisplay = document.querySelector('.number');
+const scoreDisplay = document.querySelector('.score');
+const messageDisplay = document.querySelector('.message');
+const guessInput = document.querySelector('.guess');
+const checkBtn = document.querySelector('.check');
+const againBtn = document.querySelector('.again');
+const highScoreDisplay = document.querySelector('.highscore');
 
-scoreSpan.textContent = score;
+// Utility: Generate a random number between 1 and 20
+function generateSecretNumber() {
+  return Math.trunc(Math.random() * 20) + 1;
+}
 
-checkButton.addEventListener('click', () => {
-  const guess = Number(input.value);
+// Utility: Display a message to the user
+function displayMessage(message) {
+  messageDisplay.textContent = message;
+}
+
+// Utility: Update the score
+function updateScore(newScore) {
+  score = newScore;
+  scoreDisplay.textContent = score;
+}
+
+// Event: Check guess on button click
+checkBtn.addEventListener('click', () => {
+  const guess = Number(guessInput.value);
+
+  // No input
   if (!guess) {
-    msg.textContent = 'No number';
-  } else if (guess === secretNumber) {
-    msg.textContent = 'Correct Number!';
-    numberDiv.textContent = secretNumber;
-    bodyElement.style.backgroundColor = '#60b347';
-    numberDiv.style.width = '30rem';
+    displayMessage('⛔ No number entered!');
+    return;
+  }
+
+  // Correct guess
+  if (guess === secretNumber) {
+    displayMessage('🎉 Correct Number!');
+    numberDisplay.textContent = secretNumber;
+    body.style.backgroundColor = '#60b347';
+    numberDisplay.style.width = '30rem';
+
+    // Update high score if applicable
     if (score > highScore) {
       highScore = score;
-      highScoreSpan.textContent = highScore;
+      highScoreDisplay.textContent = highScore;
     }
-  } else if (guess > secretNumber) {
-    if (score > 1) {
-      msg.textContent = 'Too high!';
-      score--;
-      scoreSpan.textContent = score;
-    } else {
-      msg.textContent = 'You lost!';
-      scoreSpan.textContent = 0;
-    }
-  } else if (guess < secretNumber) {
-    if (score > 1) {
-      msg.textContent = 'Too low!';
-      score--;
-      scoreSpan.textContent = score;
-    } else {
-      msg.textContent = 'You lost!';
-      scoreSpan.textContent = 0;
-    }
+    return;
+  }
+
+  // Incorrect guess
+  if (score > 1) {
+    displayMessage(guess > secretNumber ? '📈 Too high!' : '📉 Too low!');
+    updateScore(score - 1);
+  } else {
+    displayMessage('💥 You lost the game!');
+    updateScore(0);
   }
 });
 
-againButton.addEventListener('click', () => {
+// Event: Reset game on "Again!" button click
+againBtn.addEventListener('click', () => {
   score = 20;
-  secretNumber = Math.trunc(Math.random() * 20) + 1;
-  scoreSpan.textContent = score;
-  numberDiv.textContent = '?';
-  bodyElement.style.backgroundColor = '#222';
-  numberDiv.style.width = '15rem';
-  input.value = '';
-  msg.textContent = 'Start guessing...';
+  secretNumber = generateSecretNumber();
+
+  // Reset UI
+  updateScore(score);
+  numberDisplay.textContent = '?';
+  body.style.backgroundColor = '#222';
+  numberDisplay.style.width = '15rem';
+  guessInput.value = '';
+  displayMessage('Start guessing...');
 });
