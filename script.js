@@ -1,6 +1,6 @@
 'use strict';
 
-const secretNumber = Math.trunc(Math.random() * 20) + 1;
+let secretNumber = Math.trunc(Math.random() * 20) + 1;
 let score = 20;
 
 const bodyElement = document.querySelector('body');
@@ -9,8 +9,8 @@ const scoreSpan = document.querySelector('.score');
 const msg = document.querySelector('.message');
 const input = document.querySelector('.guess');
 const checkButton = document.querySelector('.check');
+const againButton = document.querySelector('.again');
 
-numberDiv.textContent = secretNumber;
 scoreSpan.textContent = score;
 
 checkButton.addEventListener('click', () => {
@@ -19,6 +19,7 @@ checkButton.addEventListener('click', () => {
     msg.textContent = 'No number';
   } else if (guess === secretNumber) {
     msg.textContent = 'Correct Number!';
+    numberDiv.textContent = secretNumber;
     bodyElement.style.backgroundColor = '#60b347';
     numberDiv.style.width = '30rem';
   } else if (guess > secretNumber) {
@@ -40,4 +41,15 @@ checkButton.addEventListener('click', () => {
       scoreSpan.textContent = 0;
     }
   }
+});
+
+againButton.addEventListener('click', () => {
+  score = 20;
+  secretNumber = Math.trunc(Math.random() * 20) + 1;
+  scoreSpan.textContent = score;
+  numberDiv.textContent = '?';
+  bodyElement.style.backgroundColor = '#222';
+  numberDiv.style.width = '15rem';
+  input.value = '';
+  msg.textContent = 'Start guessing...';
 });
