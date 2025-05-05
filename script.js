@@ -3,6 +3,7 @@
 const secretNumber = Math.trunc(Math.random() * 20) + 1;
 let score = 20;
 
+const bodyElement = document.querySelector('body');
 const numberDiv = document.querySelector('.number');
 const scoreSpan = document.querySelector('.score');
 const msg = document.querySelector('.message');
@@ -18,6 +19,8 @@ checkButton.addEventListener('click', () => {
     msg.textContent = 'No number';
   } else if (guess === secretNumber) {
     msg.textContent = 'Correct Number!';
+    bodyElement.style.backgroundColor = '#60b347';
+    numberDiv.style.width = '30rem';
   } else if (guess > secretNumber) {
     if (score > 1) {
       msg.textContent = 'Too high!';
